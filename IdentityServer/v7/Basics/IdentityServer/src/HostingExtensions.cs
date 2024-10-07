@@ -3,6 +3,7 @@
 
 using Duende.IdentityServer;
 using IdentityServerHost;
+using Microsoft.AspNetCore.DataProtection;
 using Serilog;
 
 internal static class HostingExtensions
@@ -10,6 +11,10 @@ internal static class HostingExtensions
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddRazorPages();
+
+        builder.Services.AddDataProtection()
+            .PersistKeysToFileSystem(new DirectoryInfo("/var/dataprotection-keys"))
+            .SetApplicationName("IdentityServerHost");
 
         var idsvrBuilder = builder.Services.AddIdentityServer(options =>
         {
